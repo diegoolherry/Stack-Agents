@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "test:template-hardening": "node --test \"tests/template-hardening/**/*.test.js\" \"tests/template-hardening/**/*.test.mjs\""
+  }
+}

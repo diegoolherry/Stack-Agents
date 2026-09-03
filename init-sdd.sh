@@ -39,6 +39,15 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+case "$PROVIDER" in
+    all|claude|opencode|gemini)
+        ;;
+    *)
+        echo "Provider inválido: $PROVIDER. Valores permitidos: all, claude, opencode, gemini." >&2
+        exit 1
+        ;;
+esac
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 TARGET_DIR="$(cd "$TARGET_DIR" 2>/dev/null && pwd || echo "$TARGET_DIR")"
 
@@ -85,15 +94,36 @@ else
     PROVIDERS=(".$PROVIDER")
 fi
 
+copy_distributable_provider() {
+    local source_dir="$1"
+    local destination_dir="$2"
+    local source_path relative_path destination_path
+
+    if [ ! -d "$source_dir" ]; then
+        echo "  [!] Plantilla no encontrada para $(basename "$source_dir") en $SCRIPT_DIR" >&2
+        return 1
+    fi
+
+    mkdir -p "$destination_dir"
+    while IFS= read -r -d '' source_path; do
+        relative_path="${source_path#"$source_dir"/}"
+        destination_path="$destination_dir/$relative_path"
+        if [ -d "$source_path" ]; then
+            mkdir -p "$destination_path"
+        else
+            mkdir -p "$(dirname "$destination_path")"
+            cp -p "$source_path" "$destination_path"
+        fi
+    done < <(find "$source_dir" -mindepth 1 \( -name node_modules -o -name package.json -o -name package-lock.json -o -name bun.lock -o -name .gitignore \) -prune -o -print0)
+}
+
 for p in "${PROVIDERS[@]}"; do
     src_path="$SCRIPT_DIR/$p"
     dst_path="$TARGET_DIR/$p"
-    if [ -d "$src_path" ]; then
-        mkdir -p "$dst_path"
-        cp -r "$src_path/"* "$dst_path/"
+    if copy_distributable_provider "$src_path" "$dst_path"; then
         echo "  [+] Copiada configuración: $p"
     else
-        echo "  [!] Plantilla no encontrada para $p en $SCRIPT_DIR"
+        exit 1
     fi
 done
 
@@ -123,7 +153,6 @@ reports/
 scripts/crap.config.*
 scripts/stryker.conf.json
 scripts/structure.config.*
-scripts/security-trigger.config.json
 EOF
     echo "  [+] Creado .gitignore con reglas SDD"
 else
@@ -143,7 +172,6 @@ reports/
 scripts/crap.config.*
 scripts/stryker.conf.json
 scripts/structure.config.*
-scripts/security-trigger.config.json
 EOF
         echo "  [+] Añadidas reglas SDD a .gitignore existente"
     else
@@ -196,5 +224,6 @@ if [ "$all_ok" = true ]; then
     echo "✅ SDD Workflow instalado e inspeccionado correctamente."
 else
     echo "⚠️ Instalación completada con advertencias. Revisa los archivos faltantes."
+    exit 1
 fi
 echo ""

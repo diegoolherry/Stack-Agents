@@ -5,3 +5,6 @@ Thumbs.db
 *.log
 .idea/
 .vscode/
+
+# Local dependencies
+node_modules/

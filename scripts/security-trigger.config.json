@@ -1,0 +1,21 @@
+{
+  "trigger_patterns": [
+    "init-sdd.ps1",
+    "init-sdd.sh",
+    ".gitignore",
+    ".claude/agents/**",
+    ".claude/commands/security-audit.md",
+    ".claude/skills/architecture_builder/**",
+    ".claude/skills/security_auditor/**",
+    ".opencode/opencode.json",
+    ".opencode/agents/**",
+    ".opencode/skills/architecture_builder/**",
+    ".opencode/skills/security_auditor/**",
+    ".gemini/GEMINI.md",
+    ".gemini/skills/architecture_builder/**",
+    ".gemini/skills/security_auditor/**",
+    "shared/AGENTS.md",
+    "scripts/security-trigger.config.json"
+  ],
+  "trigger_imports": []
+}
