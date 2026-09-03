@@ -45,6 +45,30 @@ Las skills están disponibles en la carpeta `skills/` del dotfolder correspondie
 6. **Security Auditor** (condicional: si toca paths de `security-trigger.config.json`)
 7. **Cierre**: `feature_list.json` → `done` + actualización de `progress/current.md`
 
+## Schema de `feature_list.json`
+
+```json
+{
+  "features": [
+    {
+      "id": "feature-id",
+      "title": "Descripción corta",
+      "mode": "quick | full",
+      "status": "pending | in_progress | done",
+      "created_at": "ISO8601",
+      "updated_at": "ISO8601"
+    }
+  ]
+}
+```
+
+Campos:
+- `id`: Identificador único de la feature (slug, e.g. `auth-login`).
+- `title`: Descripción breve legible por humanos.
+- `mode`: `quick` para tareas chicas (Implementer → Reviewer) o `full` para pipeline completo.
+- `status`: `pending` → `in_progress` → `done`. Solo se marca `done` al completar todo el pipeline.
+- `created_at` / `updated_at`: Timestamps ISO8601 para trazabilidad.
+
 ## Protocolo de Arranque
 
 1. Leer `feature_list.json`.

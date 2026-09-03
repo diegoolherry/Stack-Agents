@@ -97,11 +97,9 @@ $gitignoreRules = @'
 # ==============================================
 # SDD Workflow — archivos de agentes (no se suben)
 # ==============================================
-AGENTS.md
-feature_list.json
-architecture.md
-architecture/
-specs/
+/AGENTS.md
+/feature_list.json
+/architecture.md
 research/
 changes/
 progress/

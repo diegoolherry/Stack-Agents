@@ -110,7 +110,7 @@ graph TD
 
 | Subagente | Skill | Responsabilidad principal | Entregable (Archivo) |
 |---|---|---|---|
-| **`leader`** | - | Orquestador general (`/leader`) en modo conciso (`/caveman`). No implementa código directo. | `progress/current.md` |
+| **`leader`** | - | Orquestador general en modo conciso. Rol por defecto al iniciar sesión, no es un comando invocable. | `progress/current.md` |
 | **`discovery`** | `discovery` | Entrevista inicial para proyectos greenfield. | `research/project-brief.md` |
 | **`architecture_builder`** | `architecture-builder` | Genera documentación de arquitectura global y mapeo de seguridad. | `architecture/architecture.md` |
 | **`researcher`** | `researcher` | Explora el codebase y busca patrones o dependencias antes de redactar specs. | `research/<feature>/<feature>-findings.md` |
