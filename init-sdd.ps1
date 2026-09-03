@@ -21,6 +21,36 @@ param(
 $ScriptRoot = $PSScriptRoot
 if (-not $ScriptRoot) { $ScriptRoot = (Get-Location).Path }
 
+$excludedProviderArtifacts = @("node_modules", "package.json", "package-lock.json", "bun.lock", ".gitignore")
+
+function Copy-DistributableProvider {
+    param(
+        [Parameter(Mandatory = $true)][string]$Source,
+        [Parameter(Mandatory = $true)][string]$Destination
+    )
+
+    $sourceRoot = (Resolve-Path -LiteralPath $Source).Path.TrimEnd('\', '/')
+    $items = Get-ChildItem -LiteralPath $sourceRoot -Force -Recurse
+
+    foreach ($item in $items | Where-Object { $_.PSIsContainer }) {
+        $relativePath = $item.FullName.Substring($sourceRoot.Length).TrimStart('\', '/')
+        if (@($relativePath -split '[\\/]' | Where-Object { $excludedProviderArtifacts -contains $_ }).Count -gt 0) {
+            continue
+        }
+        New-Item -ItemType Directory -Path (Join-Path $Destination $relativePath) -Force | Out-Null
+    }
+
+    foreach ($item in $items | Where-Object { -not $_.PSIsContainer }) {
+        $relativePath = $item.FullName.Substring($sourceRoot.Length).TrimStart('\', '/')
+        if (@($relativePath -split '[\\/]' | Where-Object { $excludedProviderArtifacts -contains $_ }).Count -gt 0) {
+            continue
+        }
+        $destinationPath = Join-Path $Destination $relativePath
+        New-Item -ItemType Directory -Path (Split-Path -Parent $destinationPath) -Force | Out-Null
+        Copy-Item -LiteralPath $item.FullName -Destination $destinationPath -Force
+    }
+}
+
 Write-Host "`n-- Inicializando SDD Workflow en: $TargetDir" -ForegroundColor Cyan
 Write-Host "   Provider(s): $Provider" -ForegroundColor Yellow
 
@@ -58,6 +88,7 @@ if (-not (Test-Path $currentTemplateDst)) {
 }
 
 # 3. Copiar dotfolders según provider
+$installationOk = $true
 $providersToInstall = @()
 if ($Provider -eq "all") {
     $providersToInstall = @(".claude", ".opencode", ".gemini")
@@ -73,10 +104,16 @@ foreach ($p in $providersToInstall) {
         if (-not (Test-Path $dstPath)) {
             New-Item -ItemType Directory -Path $dstPath -Force | Out-Null
         }
-        Copy-Item -Path "$srcPath\*" -Destination $dstPath -Recurse -Force
-        Write-Host "  [+] Copiada configuracion: $p" -ForegroundColor Green
+        try {
+            Copy-DistributableProvider -Source $srcPath -Destination $dstPath
+            Write-Host "  [+] Copiada configuracion: $p" -ForegroundColor Green
+        } catch {
+            Write-Host "  [X] Error al copiar configuracion: $p" -ForegroundColor Red
+            $installationOk = $false
+        }
     } else {
-        Write-Host "  [!] Plantilla no encontrada para $p en $ScriptRoot" -ForegroundColor Yellow
+        Write-Host "  [X] Plantilla no encontrada para $p en $ScriptRoot" -ForegroundColor Red
+        $installationOk = $false
     }
 }
 
@@ -107,7 +144,6 @@ reports/
 scripts/crap.config.*
 scripts/stryker.conf.json
 scripts/structure.config.*
-scripts/security-trigger.config.json
 '@
 
 if (-not (Test-Path $gitignorePath)) {
@@ -136,7 +172,7 @@ if (-not (Test-Path $agentsDst)) {
 # 7. Verificación de archivos clave instalados
 Write-Host "`n-- Verificando archivos de configuracion instalados:" -ForegroundColor Cyan
 
-$allOk = $true
+$allOk = $installationOk
 
 $checkAGENTS = Join-Path $TargetDir "AGENTS.md"
 $checkFeatures = Join-Path $TargetDir "feature_list.json"
@@ -197,4 +233,5 @@ if ($allOk) {
     Write-Host "`n[SUCCESS] SDD Workflow instalado e inspeccionado correctamente.`n" -ForegroundColor Cyan
 } else {
     Write-Host "`n[WARNING] Instalacion completada con advertencias. Revisa los archivos faltantes.`n" -ForegroundColor Yellow
+    exit 1
 }

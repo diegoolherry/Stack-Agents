@@ -1,0 +1,44 @@
+# Findings — template-hardening
+
+## 1. Archivos relevantes
+- `init-sdd.ps1` (líneas 27–200): instalador de PowerShell. Crea los directorios de pipeline, copia `shared/` y cada dotfolder seleccionado, genera/anexa reglas SDD a `.gitignore`, y verifica una lista fija de archivos. La copia de provider usa `Copy-Item "$srcPath\*" -Recurse -Force` (línea 76).
+- `init-sdd.sh` (líneas 49–200): instalador Bash para Linux, macOS, Git Bash y WSL según su cabecera. Implementa las mismas siete fases; la copia de provider usa `cp -r "$src_path/"* "$dst_path/"` (línea 93).
+- `.gitignore`: solo contiene reglas de OS/IDE; no contiene las reglas SDD que ambos instaladores escriben en un destino nuevo ni una regla de dependencias Node en la raíz.
+- `.opencode/.gitignore`: ignora `node_modules`, `package.json`, `package-lock.json`, `bun.lock` y el propio `.gitignore`. Por ello esos archivos/directorios están presentes localmente pero no son rastreados.
+- `.opencode/package.json` y `.opencode/package-lock.json`: declaran y bloquean `@opencode-ai/plugin` `1.18.15`; el lockfile incluye paquetes opcionales por sistema operativo. Ambos son ignorados por `.opencode/.gitignore`.
+- `package.json` y `package-lock.json` en la raíz: no están rastreados (`git status --short` los reporta como `??`). El manifiesto es `{}` y el lockfile no contiene paquetes.
+- `.opencode/opencode.json` y `.opencode/AGENTS.md`: configuración y documentación de OpenCode que sí son rastreadas y que el instalador verifica mediante `.opencode/AGENTS.md`.
+- `.claude/skills/architecture_builder/SKILL.md`, `.opencode/skills/architecture_builder/SKILL.md` y `.gemini/skills/architecture_builder/SKILL.md`: definen como outputs `architecture/architecture.md` y `scripts/security-trigger.config.json`; muestran el schema con `trigger_patterns` y `trigger_imports`.
+- Las tres copias de `skills/security_auditor/SKILL.md`: indican que el auditor se activa si el diff toca un path de `scripts/security-trigger.config.json` y que recibe tanto ese mapa como `architecture/architecture.md`.
+- `.claude/commands/security-audit.md`: documenta feature mode contra el mapa de triggers y modo global. Indica un nombre de reporte (`reports/<feature>-security-audit.md`) distinto al que define la skill (`reports/<feature>-security.md`).
+- `README.md`: declara soporte para PowerShell y Bash/Git Bash/WSL y documenta los parámetros y la verificación posterior del instalador.
+
+## 2. Patrones existentes
+- Ambos instaladores son incrementales respecto de directorios y de los tres archivos compartidos: crean directorios o copian `AGENTS.md`, `feature_list.json` y `progress/current.template.md` únicamente cuando faltan. En cambio, siempre copian de forma recursiva el contenido del dotfolder del provider, sobrescribiendo coincidencias.
+- Ambos escriben el bloque de reglas SDD solo cuando `.gitignore` no existe o cuando el contenido no contiene el texto `SDD Workflow`. El bloque incluye `research/`, `changes/`, `progress/`, `reports/` y `scripts/security-trigger.config.json`.
+- La validación actual se limita a existencia de `AGENTS.md`, `feature_list.json`, `progress/current.template.md` y el archivo principal del provider elegido. No valida el árbol completo de cada provider, el contenido de archivos, los valores de `Provider`, la ausencia de archivos copiados, ni el estado Git resultante.
+- La ejecución observada de `init-sdd.ps1 -Provider all` contra un directorio temporal vacío devolvió éxito y encontró los seis archivos verificados. También copió `.opencode/node_modules` (3.667 archivos), `.opencode/package.json`, `.opencode/package-lock.json` y `.opencode/.gitignore`.
+- En Bash, el patrón `"$src_path/"*` no coincide con entradas que comienzan por punto bajo la expansión estándar del shell, mientras que sí coincide con `node_modules`, `package.json` y `package-lock.json`. El binario `bash` no está disponible en el entorno de investigación, por lo que no se ejecutó el instalador Bash aquí.
+- No hay directorio `tests/`, archivos `.github/workflows/`, `architecture/`, `scripts/` ni configuración de runner de tests rastreados. `package.json` raíz no define scripts y `npm test` finaliza con `Missing script: "test"`.
+- El mapa de seguridad está definido como output documental/configurable del Architecture Builder. No existe actualmente `architecture/architecture.md`, `scripts/security-trigger.config.json` ni ADR bajo `architecture/decisions/`; tampoco se halló código o workflow rastreado que evalúe automáticamente sus patrones.
+
+## 3. Dependencias afectadas
+- Los cambios de instaladores alcanzan a las tres configuraciones distribuibles: `.claude/`, `.opencode/` y `.gemini/`; los modos `all`, `claude`, `opencode` y `gemini` se seleccionan en ambos scripts.
+- La exclusión de dependencias afecta directamente al árbol `.opencode/node_modules`, originado por `.opencode/package.json`/`package-lock.json`, y a sus paquetes con binarios opcionales por plataforma presentes en el lockfile.
+- La automatización de validación requeriría un ejecutor que actualmente no existe en la raíz: Node y npm están disponibles en el entorno, pero el manifiesto no declara scripts, dependencias ni framework de pruebas. PowerShell está disponible; Bash no fue resuelto desde `PATH` en este entorno.
+- La arquitectura inicial y el mapa de triggers son consumidos por las instrucciones de Researcher, Spec Author, Implementer, Reviewer y Security Auditor en los tres providers. Los agentes de Architecture Builder tienen permisos/output declarados para `architecture/**`, `scripts/security-trigger.config.json` y, en OpenCode, `.github/**`.
+- El estado Git afecta a las reglas de ignore: la raíz no ignora los dos artefactos Node no rastreados actuales; el ignore anidado de OpenCode sí oculta sus metadatos y dependencias. El `.gitignore` que los instaladores crean en proyectos destino también ignora el mapa de triggers de seguridad, por lo que ese output no quedaría rastreado por defecto en dichos destinos.
+
+## 4. Riesgos detectados
+- **Copia de dependencias:** la copia recursiva de ambos instaladores no consulta reglas `.gitignore`; por tanto, el árbol `.opencode/node_modules` es transferido junto con la configuración. La ejecución PowerShell lo confirmó con 3.667 archivos. Esto también puede transferir binarios y paquetes específicos de plataforma.
+- **Diferencia PowerShell/Bash:** PowerShell copió `.opencode/.gitignore` en la ejecución observada. La expansión `*` de Bash no incluye dotfiles de forma estándar, por lo que el mismo archivo no sería copiado por la instrucción Bash actual. Ambos scripts sí intentan copiar los artefactos no ocultos de OpenCode.
+- **Paridad de parámetros:** PowerShell restringe `Provider` con `ValidateSet`; Bash acepta cualquier valor y lo transforma en `.<valor>`, informa que no encuentra la plantilla y finaliza sin un código de error explícito. La verificación Bash solo verifica providers reconocidos, por lo que un valor no reconocido no activa ninguna comprobación de provider.
+- **Cobertura de validación ausente:** no existe suite, comando de test, CI ni validación automatizada rastreada para los escenarios de instalación, idempotencia, selección de providers, destinos preexistentes, rutas con espacios, archivos ocultos o exclusión de dependencias. La verificación incorporada no puede detectar que se copió `node_modules`.
+- **Artefactos no rastreados:** el worktree tiene `package.json` y `package-lock.json` de raíz no rastreados. En `.opencode` existen un manifiesto, lockfile y `node_modules` ignorados. Esto hace que el contenido local de la plantilla pueda diferir de lo versionado y que la instalación distribuya contenido que no forma parte del índice Git.
+- **Mapa de seguridad inicial ausente:** las skills y agentes presuponen `architecture/architecture.md` y `scripts/security-trigger.config.json`, pero no existen en el repositorio. A falta del archivo, no hay patrones iniciales que comparar contra un diff; las instrucciones atribuyen la detección al Leader, no a una automatización encontrada.
+- **Trazabilidad del mapa:** las reglas SDD que generan ambos instaladores ignoran `scripts/security-trigger.config.json`, mientras la arquitectura y el auditor lo tratan como input requerido. En un destino recién instalado, una configuración generada en esa ruta quedaría ignorada salvo reglas Git adicionales.
+- **Inconsistencia de nombres de reporte:** el comando Claude referencia `reports/<feature>-security-audit.md` y las tres skills de Security Auditor definen `reports/<feature>-security.md`.
+- **Compatibilidad no verificada de Bash:** el README declara compatibilidad con Git Bash/WSL, pero no se pudo ejecutar ese script en el entorno actual porque no hay comando `bash` disponible.
+
+## 5. ADRs relevantes
+N/A. No existe el directorio `architecture/decisions/` ni ADRs rastreados. Tampoco existe `architecture/architecture.md` en el estado actual del repositorio.
