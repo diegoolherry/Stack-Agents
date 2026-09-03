@@ -1,10 +1,7 @@
 ---
 name: diagnose
 description: "Debugging estructurado fuera del flujo de features. Delegar cuando el usuario reporta un bug, quiere debuggear un error, o necesita diagnosticar un problema en el código."
-allowed_tools:
-  - Read
-  - Edit:reports/**
-  - Bash
+tools: Read, Edit, Bash
 ---
 
 Ejecutar debugging estructurado fuera del flujo normal de features.

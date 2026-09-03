@@ -1,10 +1,7 @@
 ---
 name: spec-author
 description: "Redacta requirements.md, design.md y tasks.md para una feature. Delegar después de que el Researcher entregó findings, para producir la baseline de especificaciones."
-allowed_tools:
-  - Read
-  - Edit:specs/**
-  - Edit:architecture/decisions/**
+tools: Read, Edit
 ---
 
 Redactar especificaciones técnicas formales para una feature.

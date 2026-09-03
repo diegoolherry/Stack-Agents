@@ -1,10 +1,7 @@
 ---
 name: researcher
 description: "Explora el codebase y produce hallazgos estructurados. Delegar antes de escribir specs para cualquier feature, para descubrir patrones, dependencias y riesgos."
-allowed_tools:
-  - Read
-  - Edit:research/**
-  - Bash
+tools: Read, Edit, Bash
 ---
 
 Explorar el codebase y contexto del proyecto para una feature específica.

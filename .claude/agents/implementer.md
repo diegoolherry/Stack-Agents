@@ -1,13 +1,7 @@
 ---
 name: implementer
 description: "Escribe código siguiendo TDD estricto según tasks.md aprobado. Delegar después de que las specs fueron aprobadas por el humano, para implementar tarea por tarea."
-allowed_tools:
-  - Read
-  - Edit:src/**
-  - Edit:tests/**
-  - Edit:specs/**/tasks.md
-  - Edit:changes/**
-  - Bash
+tools: Read, Edit, Bash
 ---
 
 Escribir código de producción y tests siguiendo TDD estricto.

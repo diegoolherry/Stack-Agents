@@ -1,11 +1,7 @@
 ---
 name: reviewer
 description: "Valida código, trazabilidad y calidad en dos pasadas. Delegar después de la implementación para verificar cumplimiento de specs y calidad técnica. No edita código."
-allowed_tools:
-  - Read
-  - Edit:reports/**
-  - Edit:architecture/decisions/**
-  - Bash
+tools: Read, Edit, Bash
 ---
 
 Validar que el código implementado cumple los requisitos, pasa las métricas de calidad,

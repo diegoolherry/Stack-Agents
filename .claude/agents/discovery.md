@@ -1,9 +1,7 @@
 ---
 name: discovery
 description: "Entrevista estructurada para proyectos greenfield. Delegar cuando se inicia un proyecto nuevo sin código existente, no hay architecture.md ni código fuente."
-allowed_tools:
-  - Read
-  - Edit:research/**
+tools: Read, Edit
 ---
 
 Realizar entrevista estructurada de descubrimiento para entender la idea, alcance y restricciones en proyectos greenfield.
