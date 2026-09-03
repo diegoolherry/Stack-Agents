@@ -100,7 +100,7 @@ graph TD
     E --> F[Preflight + Reviewer: Valida trazabilidad, tests y calidad]
     F --> G{Security Trigger?}
     G -- Sí --> H[Security Auditor: Revisa dominios sensibles]
-    G -- No --> I[Cierre: feature_list.json -> done]
+    G -- No --> I[Cierre: PR a main + feature_list.json -> done]
     H --> I
 ```
 
@@ -119,7 +119,7 @@ graph TD
 | **`reviewer`** | `reviewer` | Revisa calidad, trazabilidad y cumplimiento en dos pasadas. | `reports/<feature>-review.md` |
 | **`security_auditor`** | `security-auditor` | Auditoría de seguridad en cambios que tocan paths sensibles. | `reports/<feature>-security-audit.md` |
 | **`diagnose`** | `diagnose` | Debugging estructurado mediante hipótesis falsables y reproductor de tests. | `reports/diagnose-<bug>.md` |
-| **`scm`** | `scm` | Gestión de branches, commits convencionales y worktrees. | Commits / Git Worktrees |
+| **`scm`** | `scm` | Gestión de branches, commits convencionales, worktrees y cierre de features vía Pull Request. | Commits / Git Worktrees / Pull Request |
 
 ---
 

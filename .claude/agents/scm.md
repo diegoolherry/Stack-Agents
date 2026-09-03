@@ -1,6 +1,6 @@
 ---
 name: scm
-description: "Gestión de control de versiones, commits convencionales, branches y worktrees. Delegar cuando se necesite crear branches, configurar worktrees, hacer commits, o resolver conflictos."
+description: "Gestión de control de versiones, commits convencionales, branches y worktrees. Cierra features abriendo Pull Requests contra main — nunca pushea directo a main."
 tools: Read, Bash
 ---
 

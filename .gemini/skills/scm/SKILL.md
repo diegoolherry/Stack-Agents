@@ -44,6 +44,8 @@ Gestionar las operaciones de control de código fuente. Definir y aplicar conven
 4. **Restricciones**
    - No force push a main/master
    - No commits directos a main/master
+   - No push directo a main/master bajo ningún caso, ni siquiera tras aprobación del Reviewer/security_auditor
+   - El único camino de cierre de una feature es una Pull Request — ver sección "Cierre de feature (Pull Request)"
    - Squash al hacer merge
    - No mezclar cambios de múltiples features en un commit
 
@@ -62,6 +64,58 @@ Se ejecuta solo cuando hubo 2+ Implementers en paralelo para la misma feature.
 3. Una vez mergeados todos, correr la suite COMPLETA de tests sobre la rama de la feature integrada.
 4. Si todo pasa, borrar los worktrees por área y continuar al Reviewer con el diff integrado.
 5. Si algo falla, NO continuar al Reviewer — reportar al Leader qué área rompió qué test.
+
+### Cierre de feature (Pull Request)
+
+Se ejecuta cuando Reviewer y security_auditor ya aprobaron la feature (o la iteración correspondiente de CRs).
+
+1. Pushear la rama `feature/<feature-id>` al remoto (esto SÍ está permitido — lo prohibido es pushear a `main`)
+2. Abrir la PR contra `main`:
+   - **Vía MCP de GitHub** (si está conectado): usar el tool de creación de PR del MCP
+   - **Vía `gh` CLI** (fallback, sin dependencias extra): `gh pr create --base main --head feature/<feature-id> --title "<título>" --body-file <archivo-temporal>`
+3. NO mergear la PR automáticamente — el merge final a `main` lo hace el humano desde GitHub (squash merge, según convención)
+4. Reportar al Leader la URL de la PR generada
+
+**Título de la PR** — mismo formato que el commit squash final (Conventional Commits):
+```
+<tipo>(<scope>): <descripción corta>
+```
+Ejemplo: `feat(productos): CRUD de productos con validación de stock`
+
+Si la feature usó implementers paralelos por área, el scope agrupa las áreas principales:
+`feat(productos,pedidos): alta de pedidos con descuento de stock`
+
+**Body de la PR** — template fijo:
+
+```markdown
+## Resumen
+<1-2 líneas de qué hace la feature, tomado de requirements.md>
+
+## Tasks completadas
+- [x] Task 1: <título> (área: <área>)
+- [x] Task 2: <título> (área: <área>)
+...
+
+## RFs cubiertos
+- RF-01, RF-02, ...
+
+## Áreas (si hubo implementers en paralelo)
+- productos, pedidos
+
+## Change Requests
+- CR-productos-001: <resumen> (o "Ninguno")
+
+## Checklist UX/UI (si la feature tiene interfaz)
+- [x] Validación en formularios
+- [x] Estados vacíos/carga
+- [x] Accesibilidad básica
+
+## Reportes
+- Review: `reports/<feature-id>-review.md`
+- Security audit: `reports/<feature-id>-security.md`
+```
+
+5. Si la PR ya existe (por una iteración de CRs sobre la misma feature), actualizar el body con los nuevos CRs en vez de abrir una PR nueva.
 
 ### Convenciones aplicables
 Siempre leer en este orden de prioridad:

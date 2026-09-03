@@ -44,7 +44,7 @@ Las skills están disponibles en la carpeta `skills/` del dotfolder correspondie
 4b. **Integración** (`scm`) — merge de worktrees paralelos + suite completa de tests, solo si hubo más de un Implementer
 5. **Preflight + Reviewer** (máx. 2 vueltas; si no converge, escala a humano)
 6. **Security Auditor** (condicional: si toca paths de `security-trigger.config.json`)
-7. **Cierre**: `feature_list.json` → `done` + actualización de `progress/current.md`
+7. **Cierre**: Pull Request a main (scm) + `feature_list.json` → `done` + actualización de `progress/current.md`
 
 ## Paralelismo de Implementers (por área)
 
