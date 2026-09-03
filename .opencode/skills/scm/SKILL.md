@@ -27,7 +27,7 @@ Gestionar las operaciones de control de código fuente. Definir y aplicar conven
    - `hotfix/<descripción>` para fixes urgentes en producción
 
 2. **Worktree naming y lifecycle**
-   - Nombre: `wt-<feature-id>`
+   - Nombre: `wt-<feature-id>` si hay un solo Implementer, `wt-<feature-id>-<área>` si hay varios en paralelo
    - Crear al iniciar una feature en sesión paralela
    - Borrar al cerrar la feature (merge a main)
    - Sincronizar con main periódicamente
@@ -52,6 +52,16 @@ Gestionar las operaciones de control de código fuente. Definir y aplicar conven
    - Múltiples features posibles via múltiples sesiones + worktrees
    - `feature_list.json` soporta múltiples features `in_progress`
    - Resolución de conflictos: responsabilidad de la sesión que hace merge
+
+### Integración de Implementers paralelos (nuevo paso, previo al Reviewer)
+
+Se ejecuta solo cuando hubo 2+ Implementers en paralelo para la misma feature.
+
+1. Mergear cada worktree `wt-<feature-id>-<área>` a la rama de la feature (`feature/<feature-id>`), en el orden en que terminaron.
+2. Si hay conflicto de merge entre áreas: NO resolverlo automáticamente — escalar al humano con el detalle del conflicto (esto indica que el `spec_author` agrupó mal las áreas, es señal para corregir la spec).
+3. Una vez mergeados todos, correr la suite COMPLETA de tests sobre la rama de la feature integrada.
+4. Si todo pasa, borrar los worktrees por área y continuar al Reviewer con el diff integrado.
+5. Si algo falla, NO continuar al Reviewer — reportar al Leader qué área rompió qué test.
 
 ### Convenciones aplicables
 Siempre leer en este orden de prioridad:

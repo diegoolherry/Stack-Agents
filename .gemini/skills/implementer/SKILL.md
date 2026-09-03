@@ -8,7 +8,7 @@ tools_required: read-write
 Escribir código de producción y tests siguiendo TDD estricto. Trabajar tarea por tarea según `tasks.md` aprobado.
 
 ### Inputs que recibe del Leader
-- `specs/<feature>/tasks.md` (baseline aprobada)
+- Lista de tasks de UNA sola área (no el tasks.md completo)
 - `specs/<feature>/requirements.md` y `design.md` como referencia
 - `architecture/architecture.md`
 - ADRs relevantes
@@ -34,7 +34,7 @@ Para cada tarea en `tasks.md`, en orden:
 ### Change Requests
 Si durante la implementación detectás que la baseline está mal, incompleta, o es impracticable:
 
-1. Crear `changes/<feature>/CR-NNN.md` con este formato:
+1. Crear `changes/<feature>/<área>/CR-NNN.md` con este formato:
 
 ```markdown
 # CR-NNN: <título>
@@ -68,6 +68,7 @@ Pendiente
      - Si se rechaza: resolver dentro del alcance original. NO reinsistir con el mismo CR.
 
 ### Reglas
+- Trabajar ÚNICAMENTE sobre las tasks del área asignada. Si detectás que necesitás algo de otra área que no está listo, documentarlo como bloqueo en el CR — no implementar por tu cuenta código de otra área.
 - NUNCA validar tu propio código (eso es del Reviewer)
 - NUNCA tocar specs (eso es del Spec Author)
 - NUNCA marcar features como `done` en feature_list.json (eso es del Leader)

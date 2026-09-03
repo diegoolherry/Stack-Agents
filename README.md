@@ -115,7 +115,7 @@ graph TD
 | **`architecture_builder`** | `architecture-builder` | Genera documentación de arquitectura global y mapeo de seguridad. | `architecture/architecture.md` |
 | **`researcher`** | `researcher` | Explora el codebase y busca patrones o dependencias antes de redactar specs. | `research/<feature>/<feature>-findings.md` |
 | **`spec_author`** | `spec-author` | Escribe especificaciones técnicas detalladas y plan de tareas. | `specs/<feature>/requirements.md`, `design.md`, `tasks.md` |
-| **`implementer`** | `implementer` | Escribe tests y código siguiendo **TDD estricto**. Emite Change Requests (CR) si hay desvíos. | Código de la app y `changes/<feature>/CR-NNN.md` |
+| **`implementer`** | `implementer` | Escribe tests y código siguiendo **TDD estricto**. Emite Change Requests (CR) si hay desvíos. | Código de la app y `changes/<feature>/<área>/CR-NNN.md` |
 | **`reviewer`** | `reviewer` | Revisa calidad, trazabilidad y cumplimiento en dos pasadas. | `reports/<feature>-review.md` |
 | **`security_auditor`** | `security-auditor` | Auditoría de seguridad en cambios que tocan paths sensibles. | `reports/<feature>-security-audit.md` |
 | **`diagnose`** | `diagnose` | Debugging estructurado mediante hipótesis falsables y reproductor de tests. | `reports/diagnose-<bug>.md` |

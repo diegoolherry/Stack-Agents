@@ -29,7 +29,7 @@ Las skills están disponibles en la carpeta `skills/` del dotfolder correspondie
 | `architecture_builder` | `architecture-builder` | Genera `architecture/architecture.md` y `scripts/security-trigger.config.json`. |
 | `researcher` | `researcher` | Explora codebase y produce `research/<feature>/<feature>-findings.md`. |
 | `spec_author` | `spec-author` | Redacta `requirements.md`, `design.md`, `tasks.md` en `specs/<feature>/`. |
-| `implementer` | `implementer` | TDD estricto según `tasks.md`. Emite `changes/<feature>/CR-NNN.md` si hay desvíos. |
+| `implementer` | `implementer` | TDD estricto según `tasks.md`. Emite `changes/<feature>/<área>/CR-NNN.md` si hay desvíos. |
 | `reviewer` | `reviewer` | Dos pasadas (negocio/tests y calidad/ADRs/drift). Escribe `reports/<feature>-review.md`. |
 | `security_auditor` | `security-auditor` | Auditoría de seguridad si se tocan paths sensibles. |
 | `diagnose` | `diagnose` | Debugging estructurado con hipótesis falsables y test de regresión. |
@@ -40,10 +40,23 @@ Las skills están disponibles en la carpeta `skills/` del dotfolder correspondie
 1. **Researcher** → `research/<feature>/<feature>-findings.md`
 2. **Spec Author** → `specs/<feature>/requirements.md`, `design.md`, `tasks.md`
 3. **═══ GATE: aprobación humana obligatoria ═══**
-4. **Implementer** (TDD estricto, emite CRs si hay desvíos)
+4. **Implementer(s)** — uno o varios en paralelo según áreas de `tasks.md` (TDD estricto, emite CRs si hay desvíos)
+4b. **Integración** (`scm`) — merge de worktrees paralelos + suite completa de tests, solo si hubo más de un Implementer
 5. **Preflight + Reviewer** (máx. 2 vueltas; si no converge, escala a humano)
 6. **Security Auditor** (condicional: si toca paths de `security-trigger.config.json`)
 7. **Cierre**: `feature_list.json` → `done` + actualización de `progress/current.md`
+
+## Paralelismo de Implementers (por área)
+
+Cuando `tasks.md` tiene tasks etiquetadas con distintas `área`, el Leader:
+
+1. Agrupa las tasks pendientes por `área`.
+2. Lanza un Implementer por cada área con tasks pendientes, en paralelo, cada uno en su propio worktree (`wt-<feature-id>-<área>`).
+3. Cada Implementer trabaja SOLO con las tasks de su área — no lee ni modifica tasks de otras áreas.
+4. Al terminar todos los Implementers, el Leader dispara el paso de **Integración** (ver skill `scm`): mergear todos los worktrees a la rama de la feature y correr la suite completa de tests recién ahí.
+5. Recién después de la integración exitosa se invoca al Reviewer, sobre el diff ya integrado — el Reviewer nunca ve worktrees sueltos.
+
+Si `tasks.md` no tiene tasks etiquetadas por área (o todas comparten la misma), el comportamiento es el actual: un solo Implementer secuencial.
 
 ## Schema de `feature_list.json`
 

@@ -19,6 +19,18 @@ Este proyecto opera bajo la metodología **Spec-Driven Development (SDD)** con s
 
 El modo se elige explícitamente al arrancar una feature — el sistema nunca decide solo.
 
+## Dispatch de Implementers
+
+Después del gate humano, antes de delegar al Implementer:
+
+1. Leer `specs/<feature>/tasks.md` y agrupar tasks pendientes por campo `área`.
+2. Si hay 1 sola área → delegar a un único Implementer (comportamiento actual).
+3. Si hay 2+ áreas → delegar un Implementer por área, en paralelo, pasándole a cada uno SOLO las tasks de su área (no el archivo completo).
+4. Esperar a que todos los Implementers reporten (ruta de su changes/reporte).
+5. Delegar a `scm` el paso de Integración antes de invocar al Reviewer.
+
+> **Mecánica de invocación (Claude Code):** el Leader invoca el subagente `implementer` (`.claude/agents/implementer.md`) varias veces en el mismo turno — Claude Code corre esas invocaciones en paralelo automáticamente cuando se piden juntas. Pasarle a cada invocación el subconjunto de tasks de su área en el prompt (el subagente arranca con contexto limpio, no lee `tasks.md` completo por su cuenta).
+
 ## Reglas Core
 
 1. **Gate de Spec estricto**: Toda feature en modo Full DEBE tener `requirements.md`, `design.md` y `tasks.md` en `specs/<feature>/` aprobados antes de implementar.

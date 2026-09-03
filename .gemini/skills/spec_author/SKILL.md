@@ -105,9 +105,15 @@ Feature: <feature-id>
 
 ## Tareas
 
-- [ ] TASK-01: <descripción> (mapea a RF-01)
-- [ ] TASK-02: <descripción> (mapea a RF-02, RF-03)
-- [ ] TASK-03: Escribir tests de integración (mapea a RNF-01)
+### Task 1: <título>
+- [ ] TASK-01: <descripción>
+área: <auth | productos | pedidos | reportes | ...>
+RF relacionado: RF-XX
+
+### Task 2: <título>
+- [ ] TASK-02: <descripción>
+área: <auth | productos | pedidos | reportes | ...>
+RF relacionado: RF-XX, RF-YY
 ```
 
 **ADR (si aplica):**
@@ -138,4 +144,6 @@ Aceptado
 - NO tocar archivos fuera de `specs/` y `architecture/decisions/`
 - Respetar decisiones de ADRs existentes — no contradecirlas sin emitir un nuevo ADR
 - Los specs se congelan como BASELINE v1 tras aprobación humana — solo se modifican via Change Request
+- Cada task DEBE tener un campo `área`. Tasks que modifican los mismos archivos o que tienen una dependencia directa entre sí (una task necesita que otra esté terminada) DEBEN compartir la misma área — el área es la unidad de paralelismo, no una categoría cosmética.
+- Si una feature es chica y no tiene sentido dividirla, usar una sola área para todas las tasks (el pipeline se comporta como hoy: 1 implementer).
 - Devolver al Leader SOLO las rutas de los archivos generados

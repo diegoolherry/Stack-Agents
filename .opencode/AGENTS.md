@@ -29,8 +29,20 @@ Los subagentes están definidos en `.opencode/agents/` y sus skills en `.opencod
 
 ## Modos de Trabajo
 
-- **Full Mode**: Discovery/Arch → Researcher → Spec Author → **[Gate Aprobación]** → Implementer → Reviewer → Security Auditor.
+- **Full Mode**: Discovery/Arch → Researcher → Spec Author → **[Gate Aprobación]** → Implementer(s) → Integración (si paralelo) → Reviewer → Security Auditor.
 - **Quick Mode**: Implementer (TDD) → Reviewer.
+
+## Dispatch de Implementers
+
+Después del gate humano, antes de delegar al Implementer:
+
+1. Leer `specs/<feature>/tasks.md` y agrupar tasks pendientes por campo `área`.
+2. Si hay 1 sola área → delegar a un único Implementer (comportamiento actual).
+3. Si hay 2+ áreas → delegar un Implementer por área, en paralelo, pasándole a cada uno SOLO las tasks de su área (no el archivo completo).
+4. Esperar a que todos los Implementers reporten (ruta de su changes/reporte).
+5. Delegar a `scm` el paso de Integración antes de invocar al Reviewer.
+
+> **Mecánica de invocación (OpenCode):** invocar el agente `.opencode/agents/implementer.md` una vez por área; OpenCode soporta correrlos en paralelo. Pasarle a cada invocación el subconjunto de tasks de su área en el prompt.
 
 ## Protocolo Anti-Teléfono-Descompuesto
 

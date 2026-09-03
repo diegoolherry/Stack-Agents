@@ -23,4 +23,4 @@ Para cada tarea: RED (test que falla) → GREEN (código mínimo) → REFACTOR.
 
 Seguir las instrucciones detalladas en `.opencode/skills/implementer/SKILL.md`.
 
-Si hay desvíos de la baseline, emitir Change Request en `changes/<feature>/CR-NNN.md`.
+Si hay desvíos de la baseline, emitir Change Request en `changes/<feature>/<área>/CR-NNN.md`.
