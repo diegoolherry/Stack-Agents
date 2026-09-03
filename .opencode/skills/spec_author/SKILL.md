@@ -146,4 +146,5 @@ Aceptado
 - Los specs se congelan como BASELINE v1 tras aprobación humana — solo se modifican via Change Request
 - Cada task DEBE tener un campo `área`. Tasks que modifican los mismos archivos o que tienen una dependencia directa entre sí (una task necesita que otra esté terminada) DEBEN compartir la misma área — el área es la unidad de paralelismo, no una categoría cosmética.
 - Si una feature es chica y no tiene sentido dividirla, usar una sola área para todas las tasks (el pipeline se comporta como hoy: 1 implementer).
+- Si la feature incluye interfaz de usuario, leer .opencode/skills/ux-ui/SKILL.md y agregar los ítems del checklist que apliquen como criterios de aceptación en requirements.md
 - Devolver al Leader SOLO las rutas de los archivos generados

@@ -11,3 +11,4 @@ Seguir las instrucciones detalladas en `.claude/skills/architecture_builder/SKIL
 Outputs:
 - `architecture/architecture.md`
 - `scripts/security-trigger.config.json`
+- .github/workflows/ci.yml (y deploy.yml si aplica)

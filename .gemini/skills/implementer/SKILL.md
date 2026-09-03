@@ -12,6 +12,7 @@ Escribir código de producción y tests siguiendo TDD estricto. Trabajar tarea p
 - `specs/<feature>/requirements.md` y `design.md` como referencia
 - `architecture/architecture.md`
 - ADRs relevantes
+- Si el proyecto usa Supabase: .gemini/skills/supabase/SKILL.md como referencia técnica
 
 ### Proceso — TDD estricto por cada tarea
 Para cada tarea en `tasks.md`, en orden:

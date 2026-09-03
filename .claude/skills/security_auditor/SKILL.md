@@ -31,6 +31,7 @@ Auditar la seguridad del código implementado. NO editar código. Dos modos de o
    - Race conditions / problemas de concurrencia
    - Manejo inseguro de datos sensibles
    - Dependencias con vulnerabilidades conocidas
+   - Tablas de Supabase sin Row Level Security (RLS) activado (hallazgo crítico)
 3. Clasificar hallazgos:
    - **Bug crítico con fix directo** → describir el fix. Resultado: 1 vuelta extra a Implementer
    - **Riesgo estructural** → emitir ADR. NO bloquea el cierre de la feature

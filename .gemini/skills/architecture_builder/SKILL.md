@@ -31,6 +31,8 @@ Cuando no existe código fuente en el repositorio:
 3. Marcar claramente qué es "planned" vs "existing" en cada sección
 4. Generar `scripts/security-trigger.config.json` con los paths sensibles anticipados según el stack elegido
 5. Esta arquitectura planificada se actualiza a "existing" conforme se implementan features
+6. Si el proyecto usa Supabase como DB, leer `.gemini/skills/supabase/SKILL.md` y documentar en architecture.md: setup requerido, y agregar `supabase/migrations/**` como path sensible en security-trigger.config.json (además de auth/db)
+7. Leer `.gemini/skills/deploy/SKILL.md` y generar `.github/workflows/ci.yml` (+ deploy si aplica) como parte del setup inicial del proyecto
 
 ### Outputs
 1. `architecture/architecture.md`
@@ -48,6 +50,8 @@ Cuando no existe código fuente en el repositorio:
      "trigger_imports": ["bcrypt", "jsonwebtoken", ...]
    }
    ```
+
+3. .github/workflows/ci.yml (y deploy.yml si aplica)
 
 ### Reglas
 - Regeneración siempre COMPLETA (no incremental) — reescribir todo el archivo
