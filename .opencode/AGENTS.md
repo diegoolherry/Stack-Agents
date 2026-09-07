@@ -26,6 +26,17 @@ Los subagentes están definidos en `.opencode/agents/` y sus skills en `.opencod
 | `security_auditor` | `security_auditor` | Auditoría de código sensible según `security-trigger.config.json`. |
 | `diagnose` | `diagnose` | Debugging estructurado con hipótesis falsables. |
 | `scm` | `scm` | Commits, branches y git worktrees. |
+| `onboard` | `onboard` | Narrador del recorrido Onboard (walkthrough guiado del modo Full). Solo `read *`; narra y delega, no escribe. |
+
+## Recorrido Onboard (walkthrough guiado del modo Full)
+
+El Onboard NO es un modo nuevo: es el recorrido guiado e interactivo del modo Full sobre un codebase real (brownfield), con una mejora demo pequeña y segura (`onboard-demo-*`). Guion ejecutable en `.opencode/skills/onboard/SKILL.md`, narrado por el subagente `onboard`.
+
+- **Discovery vs Onboard**: Discovery = greenfield (sin código → entrevista → `research/project-brief.md`); Onboard = brownfield guiado (con código → walkthrough haciendo → demo `onboard-demo-*` + summary). Si no hay código fuente ni `architecture/architecture.md`, derivar a Discovery.
+- **Invocación**: el Leader invoca al narrador `onboard` para narrar (1-3 oraciones por fase, por rutas) y delega cada fase al agente real (researcher → spec-author → implementer → reviewer → scm/security-auditor según aplique).
+- **Rama `feature/onboard-*` obligatoria**: toda mutación de la demo ocurre en rama `feature/onboard-*` (worktree `wt-onboard-*` si aplica), creada antes de cualquier escritura en `src/`/`tests/`. PROHIBIDO trabajar sobre `main`.
+- **Prohibiciones**: sin merge automático a `main` (PR abierto o rama local); SIN marcar la demo como `done`; la demo (`onboard-demo-*`) NO se registra en `feature_list.json` (el tracking vive en su rama/carpeta).
+- **Persistencia del summary**: el cierre usa el template `## Onboarding Complete!` en chat Y se guarda en `reports/onboard-*.md`.
 
 ## Modos de Trabajo
 
