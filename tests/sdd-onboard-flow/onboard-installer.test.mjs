@@ -34,6 +34,13 @@ function withTemplateFixture(run) {
   }
 }
 
+function removeOnboardSources(fixture) {
+  // Caso "sin seed": borra explícitamente las fuentes onboard del fixture
+  // copiado en vez de asumir su ausencia (válido pre y post merge).
+  rmSync(join(fixture, ONBOARD_AGENT), { force: true });
+  rmSync(join(fixture, ONBOARD_SKILL), { force: true });
+}
+
 function seedOnboardSources(fixture) {
   const agentDst = join(fixture, ONBOARD_AGENT);
   const skillDst = join(fixture, ONBOARD_SKILL);
@@ -72,7 +79,8 @@ test('PowerShell (opencode): instalación fresca distribuye agente+skill onboard
 
 test('PowerShell: verificación falla si faltan agente/skill onboard en la plantilla (AC-14)', () => {
   withTemplateFixture(({ fixture, root }) => {
-    // Sin seed: la plantilla aún no trae los archivos onboard (los aporta el área onboarding).
+    // Sin seed: borra las fuentes onboard del fixture copiado (válido pre y post merge).
+    removeOnboardSources(fixture);
     const target = join(root, 'destino');
     const result = installPowerShell(fixture, target, 'opencode');
     assert.notEqual(result.status, 0, 'la verificación debe fallar si falta el onboard en la plantilla');
@@ -123,6 +131,7 @@ if (!bash) {
 
   test('Bash: verificación falla si faltan agente/skill onboard en la plantilla (AC-14)', () => {
     withTemplateFixture(({ fixture, root }) => {
+      removeOnboardSources(fixture);
       const target = join(root, 'destino-bash');
       mkdirSync(target, { recursive: true });
       const result = installBash(fixture, target, 'opencode');
