@@ -214,6 +214,8 @@ if [ "$PROVIDER" = "all" ] || [ "$PROVIDER" = "claude" ]; then
 fi
 if [ "$PROVIDER" = "all" ] || [ "$PROVIDER" = "opencode" ]; then
     check_file ".opencode/AGENTS.md" "$TARGET_DIR/.opencode/AGENTS.md"
+    check_file ".opencode/agents/onboard.md" "$TARGET_DIR/.opencode/agents/onboard.md"
+    check_file ".opencode/skills/onboard/SKILL.md" "$TARGET_DIR/.opencode/skills/onboard/SKILL.md"
 fi
 if [ "$PROVIDER" = "all" ] || [ "$PROVIDER" = "gemini" ]; then
     check_file ".gemini/GEMINI.md" "$TARGET_DIR/.gemini/GEMINI.md"
