@@ -13,6 +13,7 @@ Escribir código de producción y tests siguiendo TDD estricto. Trabajar tarea p
 - `architecture/architecture.md`
 - ADRs relevantes
 - Si el proyecto usa Supabase: .opencode/skills/supabase/SKILL.md como referencia técnica
+- Si la feature tiene 2+ áreas: la ruta absoluta del worktree asignado (wt-<feature-id>-<área>). TODO el trabajo —lectura, escritura, ejecución de tests— ocurre dentro de esa ruta, nunca en el working directory principal.
 
 ### Proceso — TDD estricto por cada tarea
 Para cada tarea en `tasks.md`, en orden:
@@ -69,6 +70,7 @@ Pendiente
      - Si se rechaza: resolver dentro del alcance original. NO reinsistir con el mismo CR.
 
 ### Reglas
+- Si no se recibió ruta de worktree explícita del Leader, asumir área única y trabajar en el working directory principal (comportamiento actual, sin cambios).
 - Trabajar ÚNICAMENTE sobre las tasks del área asignada. Si detectás que necesitás algo de otra área que no está listo, documentarlo como bloqueo en el CR — no implementar por tu cuenta código de otra área.
 - NUNCA validar tu propio código (eso es del Reviewer)
 - NUNCA tocar specs (eso es del Spec Author)

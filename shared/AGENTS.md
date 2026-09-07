@@ -28,23 +28,45 @@ Las skills están disponibles en la carpeta `skills/` del dotfolder correspondie
 | `discovery` | `discovery` | Entrevista al usuario para proyectos greenfield. Genera `research/project-brief.md`. |
 | `architecture_builder` | `architecture-builder` | Genera `architecture/architecture.md` y `scripts/security-trigger.config.json`. |
 | `researcher` | `researcher` | Explora codebase y produce `research/<feature>/<feature>-findings.md`. |
+| `propose` | `propose` | Redacta `research/<feature>/proposal.md` (gate humano pre-spec). Exento en Quick. |
 | `spec_author` | `spec-author` | Redacta `requirements.md`, `design.md`, `tasks.md` en `specs/<feature>/`. |
 | `implementer` | `implementer` | TDD estricto según `tasks.md`. Emite `changes/<feature>/<área>/CR-NNN.md` si hay desvíos. |
-| `reviewer` | `reviewer` | Dos pasadas (negocio/tests y calidad/ADRs/drift). Escribe `reports/<feature>-review.md`. |
+| `verify` | `verify` | Quality gate funcional post-integración y pre-Reviewer (solo Full). Escribe `reports/<feature>-verify.md`. No edita código. |
+| `reviewer` | `reviewer` | Dos pasadas (negocio/tests y calidad/ADRs/drift). Escribe `reports/<feature>-review.md`. Consume `reports/<feature>-verify.md` en P1. |
 | `security_auditor` | `security-auditor` | Auditoría de seguridad si se tocan paths sensibles. |
+| `archive` | `archive` | Cierre de ciclo (solo Full, solo opencode): valida gates y redacta `reports/<feature>-archive.md`. No commitea ni marca `done`. |
 | `diagnose` | `diagnose` | Debugging estructurado con hipótesis falsables y test de regresión. |
 | `scm` | `scm` | Gestión de branches, commits, worktrees y resolución de conflictos. |
 
 ## Pipeline Completo (Modo Full)
 
 1. **Researcher** → `research/<feature>/<feature>-findings.md`
-2. **Spec Author** → `specs/<feature>/requirements.md`, `design.md`, `tasks.md`
+2. **[Propose + gate liviano]** → `research/<feature>/proposal.md` (obligatorio en Full, exento en Quick). El Leader invoca a `propose` tras Researcher, presenta la proposal al gate humano pre-spec y solo ante aprobación delega al Spec Author; ante rechazo o `blocked`, retorna a Researcher (re-exploración) sin tocar `specs/<feature>/`.
+3. **Spec Author** → `specs/<feature>/requirements.md`, `design.md`, `tasks.md` (no inicia sin proposal aprobada; rechaza proposals malformadas)
 3. **═══ GATE: aprobación humana obligatoria ═══**
 4. **Implementer(s)** — uno o varios en paralelo según áreas de `tasks.md` (TDD estricto, emite CRs si hay desvíos)
 4b. **Integración** (`scm`) — merge de worktrees paralelos + suite completa de tests, solo si hubo más de un Implementer
-5. **Preflight + Reviewer** (máx. 2 vueltas; si no converge, escala a humano)
+4c. **Verify** (máx. 2 rondas; `FAIL` ronda 1 → vuelta acotada a Implementer; `PASS`/`PASS WITH WARNINGS` → avanza a Reviewer; tras ronda 2 sin converger escala a humano). Solo Full Mode — Quick Mode sin Verify.
+5. **Preflight + Reviewer** (máx. 2 vueltas; si no converge, escala a humano). Reviewer P1 consume `reports/<feature>-verify.md` como evidencia autoritativa y no re-decide sin motivo concreto; P2 (calidad/drift/ADRs, veredicto final) exclusivo del Reviewer.
 6. **Security Auditor** (condicional: si toca paths de `security-trigger.config.json`)
-7. **Cierre**: Pull Request a main (scm) + `feature_list.json` → `done` + actualización de `progress/current.md`
+7. **Archive** (agente `archive`, solo Full solo-opencode): valida gates y redacta `reports/<feature>-archive.md` (`ARCHIVED | BLOCKED | PARTIAL-INTENCIONAL`); con BLOCKED no hay PR
+8. **Cierre**: Pull Request a main (scm, cita `reports/<feature>-verify.md` junto a review/security/archive) + `feature_list.json` → `done` + actualización de `progress/current.md`
+
+Orden de cierre: `... Verify → Reviewer → Security (condicional) → Archive (agente archive, acta) → push/PR (scm) → merge humano → done + current.md`. El Leader invoca a `archive`; `archive`/`scm` no marcan `done` y `scm` no ejecuta Archive. `done` + `current.md` van solo tras acta + merge humano.
+
+## Delimitación Verify vs Reviewer y contadores
+
+| Dimensión | Verify (autoridad) | Reviewer (autoridad) |
+|---|---|---|
+| Tasks completadas | ✅ decide PASS/FAIL blocked | Lee el veredicto, no re-decide salvo contradicción concreta |
+| RF/escenario → covering test pasado | ✅ matriz spec + veredicto | P1 verifica lectura, solo re-abre con motivo concreto |
+| Coherencia design | ✅ WARNING salvo rotura spec | No duplica; solo P2 evalúa implicancias de calidad |
+| CRAP/mutation/naming/duplicación | ❌ no evalúa | ✅ P2 exclusivo |
+| ADRs/drift (`architecture_drift`) | ❌ no emite ADR ni flag | ✅ P2 exclusivo |
+| Seguridad/RLS/secretos | ❌ excluido | ❌ (Security Auditor) |
+| Veredicto final APRUEBA/RECHAZA | ❌ no lo emite | ✅ exclusivo del Reviewer |
+
+Contadores independientes: `verify_round` (1–2, solo Verify) ≠ `reviewer_round` (1–2, solo Reviewer) ≠ contador de CRs. Regla anti-loop: Verify nunca edita código ni inicia otro review/fix loop por sí mismo; una contradicción irresoluble spec-vs-design-vs-diff = `FAIL` + escalación a humano, no reintento; una ronda Verify → Verify sin cambio de diff (mismo hash) está prohibida.
 
 ## Paralelismo de Implementers (por área)
 
