@@ -7,6 +7,46 @@
       "status": "done",
       "created_at": "2026-09-03T00:00:00.000Z",
       "updated_at": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "id": "fix-12-worktrees-before-implementers",
+      "title": "FIX-12: crear worktrees por área ANTES de lanzar implementers en paralelo (solo opencode)",
+      "mode": "quick",
+      "status": "in_progress",
+      "created_at": "2026-09-07T00:00:00.000Z",
+      "updated_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "sdd-propose-phase",
+      "title": "Fase SDD Propose (solo opencode): propuesta intent/scope/approach con gate humano antes de spec",
+      "mode": "full",
+      "status": "in_progress",
+      "created_at": "2026-09-07T00:00:00.000Z",
+      "updated_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "sdd-verify-phase",
+      "title": "Fase SDD Verify independiente (solo opencode): verificación contra spec/design/tasks separada de Reviewer",
+      "mode": "full",
+      "status": "in_progress",
+      "created_at": "2026-09-07T00:00:00.000Z",
+      "updated_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "sdd-archive-phase",
+      "title": "Fase SDD Archive (solo opencode): merge delta-specs y cierre de ciclo",
+      "mode": "full",
+      "status": "in_progress",
+      "created_at": "2026-09-07T00:00:00.000Z",
+      "updated_at": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "id": "sdd-onboard-flow",
+      "title": "Flujo SDD Onboard guiado (solo opencode): walkthrough end-to-end sobre codebase real",
+      "mode": "full",
+      "status": "in_progress",
+      "created_at": "2026-09-07T00:00:00.000Z",
+      "updated_at": "2026-09-07T00:00:00.000Z"
     }
   ]
 }

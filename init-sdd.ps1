@@ -217,6 +217,48 @@ if ($Provider -eq "all" -or $Provider -eq "opencode") {
         Write-Host "  [X] Faltante: .opencode/AGENTS.md" -ForegroundColor Red
         $allOk = $false
     }
+    $checkVerifyAgent = Join-Path $TargetDir ".opencode\agents\verify.md"
+    if (Test-Path $checkVerifyAgent) {
+        Write-Host "  [OK] .opencode/agents/verify.md" -ForegroundColor Green
+    } else {
+        Write-Host "  [X] Faltante: .opencode/agents/verify.md" -ForegroundColor Red
+        $allOk = $false
+    }
+    $checkVerifySkill = Join-Path $TargetDir ".opencode\skills\verify\SKILL.md"
+    if (Test-Path $checkVerifySkill) {
+        Write-Host "  [OK] .opencode/skills/verify/SKILL.md" -ForegroundColor Green
+    } else {
+        Write-Host "  [X] Faltante: .opencode/skills/verify/SKILL.md" -ForegroundColor Red
+        $allOk = $false
+    }
+    $checkArchiveAgent = Join-Path $TargetDir ".opencode\agents\archive.md"
+    if (Test-Path $checkArchiveAgent) {
+        Write-Host "  [OK] .opencode/agents/archive.md" -ForegroundColor Green
+    } else {
+        Write-Host "  [X] Faltante: .opencode/agents/archive.md" -ForegroundColor Red
+        $allOk = $false
+    }
+    $checkArchiveSkill = Join-Path $TargetDir ".opencode\skills\archive\SKILL.md"
+    if (Test-Path $checkArchiveSkill) {
+        Write-Host "  [OK] .opencode/skills/archive/SKILL.md" -ForegroundColor Green
+    } else {
+        Write-Host "  [X] Faltante: .opencode/skills/archive/SKILL.md" -ForegroundColor Red
+        $allOk = $false
+    }
+    $checkOnboardAgent = Join-Path $TargetDir ".opencode\agents\onboard.md"
+    if (Test-Path $checkOnboardAgent) {
+        Write-Host "  [OK] .opencode/agents/onboard.md" -ForegroundColor Green
+    } else {
+        Write-Host "  [X] Faltante: .opencode/agents/onboard.md" -ForegroundColor Red
+        $allOk = $false
+    }
+    $checkOnboardSkill = Join-Path $TargetDir ".opencode\skills\onboard\SKILL.md"
+    if (Test-Path $checkOnboardSkill) {
+        Write-Host "  [OK] .opencode/skills/onboard/SKILL.md" -ForegroundColor Green
+    } else {
+        Write-Host "  [X] Faltante: .opencode/skills/onboard/SKILL.md" -ForegroundColor Red
+        $allOk = $false
+    }
 }
 
 if ($Provider -eq "all" -or $Provider -eq "gemini") {

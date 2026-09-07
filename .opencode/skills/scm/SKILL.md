@@ -67,7 +67,7 @@ Se ejecuta solo cuando hubo 2+ Implementers en paralelo para la misma feature.
 
 ### Cierre de feature (Pull Request)
 
-Se ejecuta cuando Reviewer y security_auditor ya aprobaron la feature (o la iteración correspondiente de CRs).
+Se ejecuta cuando Reviewer y security_auditor ya aprobaron la feature (o la iteración correspondiente de CRs) y el agente `archive` emitió el acta de cierre con veredicto `ARCHIVED` o `PARTIAL-INTENCIONAL` (con `BLOCKED` no hay push/PR). Archive la ejecuta el agente `archive` invocado por el Leader — `scm` no ejecuta Archive, solo el push + PR posterior con rutas estables (`specs/<feature>/`, `reports/`).
 
 1. Pushear la rama `feature/<feature-id>` al remoto (esto SÍ está permitido — lo prohibido es pushear a `main`)
 2. Abrir la PR contra `main`:
@@ -111,8 +111,10 @@ Si la feature usó implementers paralelos por área, el scope agrupa las áreas 
 - [x] Accesibilidad básica
 
 ## Reportes
+- Verify: `reports/<feature-id>-verify.md` (veredicto PASS | PASS WITH WARNINGS | FAIL; Reviewer P1 lo consume como evidencia autoritativa)
 - Review: `reports/<feature-id>-review.md`
 - Security audit: `reports/<feature-id>-security.md`
+- Archive: `reports/<feature-id>-archive.md` (veredicto ARCHIVED | BLOCKED | PARTIAL-INTENCIONAL; rutas estables)
 ```
 
 5. Si la PR ya existe (por una iteración de CRs sobre la misma feature), actualizar el body con los nuevos CRs en vez de abrir una PR nueva.
