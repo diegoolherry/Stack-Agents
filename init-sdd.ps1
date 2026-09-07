@@ -245,6 +245,20 @@ if ($Provider -eq "all" -or $Provider -eq "opencode") {
         Write-Host "  [X] Faltante: .opencode/skills/archive/SKILL.md" -ForegroundColor Red
         $allOk = $false
     }
+    $checkOnboardAgent = Join-Path $TargetDir ".opencode\agents\onboard.md"
+    if (Test-Path $checkOnboardAgent) {
+        Write-Host "  [OK] .opencode/agents/onboard.md" -ForegroundColor Green
+    } else {
+        Write-Host "  [X] Faltante: .opencode/agents/onboard.md" -ForegroundColor Red
+        $allOk = $false
+    }
+    $checkOnboardSkill = Join-Path $TargetDir ".opencode\skills\onboard\SKILL.md"
+    if (Test-Path $checkOnboardSkill) {
+        Write-Host "  [OK] .opencode/skills/onboard/SKILL.md" -ForegroundColor Green
+    } else {
+        Write-Host "  [X] Faltante: .opencode/skills/onboard/SKILL.md" -ForegroundColor Red
+        $allOk = $false
+    }
 }
 
 if ($Provider -eq "all" -or $Provider -eq "gemini") {

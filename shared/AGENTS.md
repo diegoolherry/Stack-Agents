@@ -37,6 +37,17 @@ Las skills están disponibles en la carpeta `skills/` del dotfolder correspondie
 | `archive` | `archive` | Cierre de ciclo (solo Full, solo opencode): valida gates y redacta `reports/<feature>-archive.md`. No commitea ni marca `done`. |
 | `diagnose` | `diagnose` | Debugging estructurado con hipótesis falsables y test de regresión. |
 | `scm` | `scm` | Gestión de branches, commits, worktrees y resolución de conflictos. |
+| `onboard` | `onboard` | Narrador del recorrido Onboard (walkthrough guiado del modo Full). Solo `read *`; narra y delega, no escribe. |
+
+## Recorrido Onboard (walkthrough guiado del modo Full)
+
+El Onboard NO es un modo nuevo ni altera el pipeline: es el recorrido guiado e interactivo del modo Full sobre un codebase real (brownfield), con una mejora demo pequeña y segura (`onboard-demo-*`). Guion ejecutable en la skill `onboard`, narrado por el subagente `onboard` (1-3 oraciones por fase, artefactos por ruta).
+
+- **Discovery vs Onboard**: Discovery = greenfield (sin código → entrevista → `research/project-brief.md`); Onboard = brownfield guiado (con código → walkthrough haciendo → demo `onboard-demo-*` + summary). Si no hay código fuente ni `architecture/architecture.md`, derivar a Discovery y no forzar el Onboard.
+- **Invocación**: el Leader invoca al narrador `onboard` para narrar y delega cada fase al agente real (researcher → spec-author → implementer → reviewer → scm/security-auditor según aplique).
+- **Rama `feature/onboard-*` obligatoria**: toda mutación de la demo ocurre en rama `feature/onboard-*` (worktree `wt-onboard-*` si aplica), creada antes de cualquier escritura en `src/`/`tests/`. PROHIBIDO trabajar sobre `main` o rama de feature ajena.
+- **Prohibiciones**: sin merge automático a `main` (el PR queda abierto o la rama queda local para revisión); SIN marcar la demo como `done` en `feature_list.json` ni en `progress/current.md`; la demo (`onboard-demo-*`) NO se registra en `feature_list.json` (el tracking vive solo en su rama/carpeta: `specs/onboard-demo-*/`, `research/onboard-demo-*/`, `reports/onboard-demo-*`).
+- **Persistencia del summary**: el cierre usa el template `## Onboarding Complete!` en chat Y se guarda en `reports/onboard-*.md` para trazabilidad y relectura.
 
 ## Pipeline Completo (Modo Full)
 

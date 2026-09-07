@@ -1,5 +1,6 @@
 {
   "scripts": {
-    "test:template-hardening": "node --test \"tests/template-hardening/**/*.test.js\" \"tests/template-hardening/**/*.test.mjs\""
+    "test:template-hardening": "node --test \"tests/template-hardening/**/*.test.js\" \"tests/template-hardening/**/*.test.mjs\"",
+    "test:sdd-onboard-flow": "node --test \"tests/sdd-onboard-flow/**/*.test.mjs\""
   }
 }

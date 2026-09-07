@@ -218,6 +218,8 @@ if [ "$PROVIDER" = "all" ] || [ "$PROVIDER" = "opencode" ]; then
     check_file ".opencode/skills/verify/SKILL.md" "$TARGET_DIR/.opencode/skills/verify/SKILL.md"
     check_file ".opencode/agents/archive.md" "$TARGET_DIR/.opencode/agents/archive.md"
     check_file ".opencode/skills/archive/SKILL.md" "$TARGET_DIR/.opencode/skills/archive/SKILL.md"
+    check_file ".opencode/agents/onboard.md" "$TARGET_DIR/.opencode/agents/onboard.md"
+    check_file ".opencode/skills/onboard/SKILL.md" "$TARGET_DIR/.opencode/skills/onboard/SKILL.md"
 fi
 if [ "$PROVIDER" = "all" ] || [ "$PROVIDER" = "gemini" ]; then
     check_file ".gemini/GEMINI.md" "$TARGET_DIR/.gemini/GEMINI.md"
