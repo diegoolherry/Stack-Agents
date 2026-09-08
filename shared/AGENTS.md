@@ -100,7 +100,8 @@ Si `tasks.md` no tiene tasks etiquetadas por área (o todas comparten la misma),
       "id": "feature-id",
       "title": "Descripción corta",
       "mode": "quick | full",
-      "status": "pending | in_progress | done",
+      "status": "pending | in_progress | pr | done",
+      "pr_url": "URL de la PR (se setea al entrar en `pr`, opcional en el resto)",
       "created_at": "ISO8601",
       "updated_at": "ISO8601"
     }
@@ -112,7 +113,7 @@ Campos:
 - `id`: Identificador único de la feature (slug, e.g. `auth-login`).
 - `title`: Descripción breve legible por humanos.
 - `mode`: `quick` para tareas chicas (Implementer → Reviewer) o `full` para pipeline completo.
-- `status`: `pending` → `in_progress` → `done`. Solo se marca `done` al completar todo el pipeline.
+- `status`: `pending` → `in_progress` → `pr` → `done`, con regla de rechazo `pr` → `in_progress`. Solo se marca `done` tras merge humano del PR; `pr` = pipeline completo con PR abierta por `scm` esperando merge. Lo abandonado vuelve a `in_progress` con motivo (sin estado `cancelled`).
 - `created_at` / `updated_at`: Timestamps ISO8601 para trazabilidad.
 
 ## Protocolo de Arranque

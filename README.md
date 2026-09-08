@@ -221,7 +221,7 @@ El Leader encadena fases pasándose rutas, no resúmenes: cada agente downstream
 
 ## 9. Estado del backlog
 
-Fuente de verdad: `feature_list.json` en la raíz (campos `id`, `title`, `mode`, `status`: `pending` → `in_progress` → `done`; solo se marca `done` tras acta de Archive + merge humano del PR).
+Fuente de verdad: `feature_list.json` en la raíz (campos `id`, `title`, `mode`, `status`: `pending` → `in_progress` → `pr` → `done`, más `pr_url?` que se setea al entrar en `pr`; solo se marca `done` tras acta de Archive + merge humano del PR; ante rechazo humano documentado se vuelve a `in_progress` y `scm` actualiza la MISMA PR).
 
 | Feature | Modo | Estado | Qué es |
 |---|---|---|---|

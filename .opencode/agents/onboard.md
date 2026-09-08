@@ -1,6 +1,7 @@
 ---
 description: "Subagente Onboard SDD. Coordinador-narrador del walkthrough guiado del pipeline Full sobre codebase real (brownfield). Solo narra y delega — no escribe artefactos ni código."
 mode: subagent
+model: openai/gpt-5.6-luna
 permissions:
   - action: read
     resource: "*"

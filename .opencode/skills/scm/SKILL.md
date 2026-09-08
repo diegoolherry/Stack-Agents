@@ -74,7 +74,7 @@ Se ejecuta cuando Reviewer y security_auditor ya aprobaron la feature (o la iter
    - **Vía MCP de GitHub** (si está conectado): usar el tool de creación de PR del MCP
    - **Vía `gh` CLI** (fallback, sin dependencias extra): `gh pr create --base main --head feature/<feature-id> --title "<título>" --body-file <archivo-temporal>`
 3. NO mergear la PR automáticamente — el merge final a `main` lo hace el humano desde GitHub (squash merge, según convención)
-4. Reportar al Leader la URL de la PR generada
+4. Reportar al Leader la URL de la PR generada para que setee `status: pr` + `pr_url` en `feature_list.json` (`in_progress → pr`) — el reporte de la URL es obligatorio, sin ella el Leader no puede registrar el estado `pr`
 
 **Título de la PR** — mismo formato que el commit squash final (Conventional Commits):
 ```
